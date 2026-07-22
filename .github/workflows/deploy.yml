@@ -18,7 +18,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: us-east-1 # Update if S3 is in a different region
+          aws-region: ap-south-1 # Update if S3 is in a different region
 
       - name: Setup Node & Cache
         uses: actions/setup-node@v4
@@ -46,7 +46,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: us-east-1 # Update if EC2 is in a different region
+          aws-region: ap-south-1 # Update if EC2 is in a different region
 
       - name: Deploy via SSM & Wait for Result
         run: |
@@ -55,7 +55,7 @@ jobs:
             --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
             --document-name "AWS-RunShellScript" \
             --comment "Deploying backend from GitHub Actions" \
-            --parameters '{"commands":["sudo -u ssm-user bash -c \"cd /opt/video-app/VideoStreaming && git fetch origin && git reset --hard origin/main && cd server && npm ci\"","sudo systemctl restart video-stream"]}' \
+            --parameters '{"commands":["sudo -u ssm-user bash -c \"cd /opt/video-app/VideoStreaming && git fetch origin && git reset --hard origin/main && cd server && npm ci\"","sudo systemctl restart video-api video-worker"]}' \
             --query 'Command.CommandId' \
             --output text)
 
