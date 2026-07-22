@@ -1,4 +1,8 @@
 name: Deploy Monorepo (Frontend + Backend)
+env:
+  VITE_API_URL: https://www.streamclips.in
+  VITE_CLOUDFRONT_DOMAIN: www.streamclips.in
+  VITE_ENVIRONMENT: production
 
 on:
   push:
@@ -23,7 +27,7 @@ jobs:
       - name: Setup Node & Cache
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "npm"
           cache-dependency-path: client/package-lock.json
 
