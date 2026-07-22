@@ -1,44 +1,27 @@
 const express = require("express");
 const cors = require("cors");
-const path = require('path');
 const uploadRoutes = require("./routes/upload.routes.js");
 const videoRoutes = require("./routes/video.routes.js");
 
 const app = express();
 
-app.use(cors());
+// Restrict CORS to your specific domain for security.
+// Even though CloudFront proxies the traffic, best practice to be explicit.
+app.use(cors({
+  origin: ['https://streamclips.in', 'https://www.streamclips.in'],
+  credentials: true // Required for cookies/sessions
+}));
+
 app.use(express.json());
 
+// API Routes
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/videos", videoRoutes);
 
-const fs = require("fs");
+// Optional: Health check route for monitoring
+app.get("/api/health", (req, res) => res.status(200).send("Server is running"));
 
-// Serve Vite static assets (support both my-react-app/dist and client/dist)
-const myReactAppDist = path.join(__dirname, "../../my-react-app/dist");
-const clientDist = path.join(__dirname, "../../client/dist");
-const clientDistPath = fs.existsSync(myReactAppDist) ? myReactAppDist : clientDist;
-
-app.use(
-  express.static(clientDistPath, {
-    maxAge: "1y",
-    etag: true,
-    lastModified: true,
-    index: false, // Prevent auto-serving index.html for asset paths
-  })
-);
-
-app.use((req, res) => {
-  const indexPath = path.join(clientDistPath, "index.html");
-  if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else {
-    res
-      .status(404)
-      .send(
-        "Frontend build (index.html) not found. Please run 'npm run build' in my-react-app."
-      );
-  }
-});
+// ❌ REMOVED: 'fs', 'path', express.static, and the catch-all SPA route.
+// CloudFront and S3 now handle all frontend routing and asset delivery!
 
 module.exports = app;
