@@ -1,0 +1,309 @@
+/* ==========================================================================
+   GLOBAL STRUCTURE SETUP
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+  /* Prevent the page itself from rubber-banding on overscroll,
+     which fights with horizontal row scroll containers */
+  overscroll-behavior-y: none;
+}
+
+body {
+  margin: 0;
+  background-color: #141414;
+  color: #ffffff;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* Clip horizontal overflow at body level so no horizontal scrollbar appears */
+  overflow-x: hidden;
+}
+
+body {
+  background-color: #0a0a0a; /* was #141414 — noticeably more premium/cinematic */
+}
+
+.netflixCatalog {
+  background: #0a0a0a;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1 0 auto;
+  margin-top: 64px;
+}
+
+/* ==========================================================================
+   PREMIUM STREAMING NAVBAR
+   ========================================================================== */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 68px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.4) 60%,
+    transparent 100%
+  );
+  transition:
+    background-color 0.4s ease,
+    backdrop-filter 0.4s ease,
+    box-shadow 0.4s ease;
+
+  /* Forces the GPU to handle this layer separately, eliminating scroll micro-stutter */
+  will-change: background-color, backdrop-filter;
+}
+
+/* State change triggered on page scroll down */
+.navbar.scrolled {
+  background-color: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.nav-container {
+  width: 100%;
+  padding: 0 4%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-left,
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+/* Cinematic Logo Profile */
+.netflix-logo {
+  color: #e50914;
+  font-weight: 900;
+  font-size: 24px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    text-shadow 0.2s ease;
+  outline: none !important;
+}
+
+.netflix-logo:hover {
+  transform: scale(1.02);
+  text-shadow: 0 0 12px rgba(229, 9, 14, 0.4);
+}
+
+/* Dynamic Links Array Layout */
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: #e5e5e5;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition:
+    color 0.3s ease,
+    text-shadow 0.3s ease;
+  outline: none !important;
+}
+
+.nav-links a:hover {
+  color: #b3b3b3;
+}
+
+/* Active Highlight Profile matching native UI rules */
+.nav-links a.active {
+  color: #ffffff !important;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Glassmorphic Upload Button with outline safeguard rules */
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  outline: none !important;
+}
+
+.upload-btn:focus,
+.upload-btn:active,
+.upload-btn:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.upload-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.25);
+}
+
+/* Profile Menu Avatar Layout */
+.profile-menu {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.avatar-img {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.profile-menu:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   MINIMALIST SYSTEM FOOTER
+   ========================================================================== */
+.footer {
+  background: #141414;
+  padding: 40px 0;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 4%;
+  text-align: center;
+}
+
+.footer p {
+  color: #808080;
+  font-size: 14px;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   TABLET  (≤ 768px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .navbar {
+    height: 56px;
+  }
+
+  .main-content {
+    margin-top: 56px;
+  }
+
+  .netflix-logo {
+    font-size: 20px;
+  }
+
+  /* Hide nav links on tablet — not enough room */
+  .nav-links {
+    display: none;
+  }
+
+  .nav-left,
+  .nav-right {
+    gap: 14px;
+  }
+
+  .upload-btn span {
+    display: none; /* Show icon only, hide "Upload" text */
+  }
+
+  .upload-btn {
+    padding: 8px 10px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE  (≤ 480px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .navbar {
+    height: 50px;
+  }
+
+  .main-content {
+    margin-top: 50px;
+  }
+
+  .nav-container {
+    padding: 0 4%;
+  }
+
+  .netflix-logo {
+    font-size: 18px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-left,
+  .nav-right {
+    gap: 10px;
+  }
+
+  .upload-btn {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .upload-btn span {
+    display: none;
+  }
+
+  .avatar-img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .footer {
+    padding: 24px 0;
+  }
+
+  .footer p {
+    font-size: 12px;
+  }
+}
