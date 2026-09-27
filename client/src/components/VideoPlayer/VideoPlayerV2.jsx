@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Hls from "hls.js";
 import "./VideoPlayerV2.css";
@@ -8,6 +8,7 @@ import { getManifestUrl, getThumbnailUrl } from "../../config/env";
 function VideoPlayer() {
   const { videoId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const videoRef = useRef(null);
   const hlsRef = useRef(null);
   const playerContainerRef = useRef(null);
@@ -298,6 +299,16 @@ function VideoPlayer() {
       ? `Auto${resolvedAutoLabel ? ` (${resolvedAutoLabel})` : ""}`
       : levels.find((l) => l.index === currentLevel)?.label || "Quality";
 
+  // history.back() walks the whole tab's history. Embedded in another site
+  // (e.g. the portfolio's phone) or opened from a shared link, the previous
+  // entry may not be ours — Safari doesn't even record iframe pushes — so
+  // go to the catalog explicitly instead of leaving the host page.
+  const goBack = () => {
+    const embedded = window.self !== window.top;
+    if (!embedded && location.key !== "default") navigate(-1);
+    else navigate("/", { replace: embedded });
+  };
+
   if (loading)
     return <div className="loading">Loading cinematic experience...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -305,7 +316,7 @@ function VideoPlayer() {
 
   return (
     <div className="video-player-page">
-      <button className="back-btn" onClick={() => navigate(-1)}>
+      <button className="back-btn" onClick={goBack}>
         <svg
           width="16"
           height="16"
